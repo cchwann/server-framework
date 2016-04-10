@@ -7,6 +7,7 @@
 
 static void on_data(server_pt srv, int fd)
 {
+#if 0
     static char reply[] =
         "HTTP/1.1 200 OK\r\n"
         "Content-Length: 12\r\n"
@@ -14,10 +15,19 @@ static void on_data(server_pt srv, int fd)
         "Keep-Alive: timeout=2\r\n"
         "\r\n"
         "Hello World!";
+#else
+    static char reply[] =
+        "HTTP/1.0 200 OK\r\n"
+        "Content-Length: 12\r\n"
+        "\r\n"
+        "Hello World!";
+#endif
     char buff[1024];
 
-    if (Server.read(srv, fd, buff, 1024))
+    if (Server.read(srv, fd, buff, 1024)) {
         Server.write(srv, fd, reply, sizeof(reply));
+        close(fd);
+    }
 }
 
 void print_conn(server_pt srv, int fd, void *arg)
