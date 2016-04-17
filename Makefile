@@ -16,6 +16,12 @@ HTTP_PARSER_PATH := externals/http-parser
 CFLAGS += -I./$(HTTP_PARSER_PATH)
 LDFLAGS += -L./$(HTTP_PARSER_PATH) -lhttp_parser
 
+ifeq ($(strip $(PROFILE)),1)
+PROF_FLAGS = -pg
+CFLAGS += $(PROF_FLAGS)
+LDFLAGS += $(PROF_FLAGS)
+endif
+
 OBJS := \
 	async.o \
 	reactor.o \
@@ -51,6 +57,6 @@ clean:
 
 distclean: clean
 	rm -rf html
-	make -C $(HTTP_PARSER_PATH) clean
+	$(MAKE) -C $(HTTP_PARSER_PATH) clean
 
 -include $(deps)
